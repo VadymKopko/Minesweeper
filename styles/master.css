@@ -1,0 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+body, html{
+    height: 100%;
+}
+  
+.clr {
+    clear: both;
+}

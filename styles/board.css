@@ -1,0 +1,37 @@
+.main-container{
+    width: 80%;
+    padding: 16px;
+    margin: auto;
+}
+
+table{
+    position: relative;
+    margin: 0 auto;
+    border-collapse: collapse;
+    border: 1px solid #106a10;
+}
+
+td{
+    padding: 0;
+    height: 25px;
+    width: 25px;
+    text-align: center;
+}
+
+td{
+    background-color: #1dc21d;
+}
+
+tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd){
+    background-color: #1aac1a;
+}
+
+.hover{
+    height: 25px;
+    width: 25px;
+    background-color: transparent;
+}
+
+.hover:hover{
+    background-color: rgba(255, 255, 255, 0.15);
+}
