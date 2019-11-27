@@ -19,10 +19,14 @@
     // Constant variables:
     const SPREAD = 16; // Determines how spread mines are on the grid.
 
+    // Panels vars
+    var timeLeft = 999;
+
     // Board settings: 
-    var gridRows = 16;  // Determines  number of rows in a grid.
-    var gridCols = 30;  // Determines  number of columns in a grid.
-    var numOfMines = 99;  // Determines the number of mines on the grid.
+    var gridRows = 9;  // Determines  number of rows in a grid.
+    var gridCols = 9;  // Determines  number of columns in a grid.
+    var numOfMines = 10;  // Determines the number of mines on the grid.
+    var numOfFlags = numOfMines;
 
     // Initializes a new 1D Array:
     var grid = new Array(gridRows);
@@ -101,6 +105,9 @@
                 // Set status of check to false
                 grid[row][col][2] = false;
 
+                // Set status of flags on the cell to false
+                grid[row][col][3] = false;
+
                 // Set all numbers of mines around to zero
                 grid[row][col][4] = 0;
 
@@ -143,17 +150,19 @@
             // Remove the hidden class
             setVisible(cells[n]);
 
-            // Set all other iterations of check cell funtion by computer
-            userLeftClick = false;
+            if(grid[row][col][4] == 0 || userLeftClick){
+                // Set all other iterations of check cell funtion by computer
+                userLeftClick = false;
 
-            if(grid[row][col][4] <= 1){
                 // Check other cells around this one if possible:
                 if(row-1>=0){if(!grid[row-1][col][2]){checkCell((row-1),col);}}  // North 
                 if(row+1<gridRows){if(!grid[row+1][col][2]){checkCell(row+1,col);}}  // South 
                 if(col+1<gridCols){if(!grid[row][col+1][2]){checkCell(row,col+1);}}  // East
                 if(col-1>=0){if(!grid[row][col-1][2]){checkCell(row,col-1);}}    // West
             }
-            
+
+            // Set all other iterations of check cell funtion by computer
+            userLeftClick = false;
         }
     }
 
@@ -250,7 +259,15 @@
             for(var col = 0; col < gridCols; col++){
                 if(!grid[row][col][0] && grid[row][col][4] != 0){
                     cells[cellToDoc(row, col)].childNodes[1].innerHTML = grid[row][col][4];
-                    // TODO: Change the color depending on the number
+                    if(grid[row][col][4] == 1){
+                        cells[cellToDoc(row, col)].childNodes[1].classList.add("sml-num");
+                    } else if(grid[row][col][4] == 2){
+                        cells[cellToDoc(row, col)].childNodes[1].classList.add("sml-num-2");
+                    } else if(grid[row][col][4] == 3){
+                        cells[cellToDoc(row, col)].childNodes[1].classList.add("mid-num");
+                    } else {
+                        cells[cellToDoc(row, col)].childNodes[1].classList.add("lrg-num");
+                    }
                     
                 }
             }
@@ -373,11 +390,25 @@
         cells[cellToDoc(row, col)].childNodes[1].innerHTML = "X";
     } 
 
+    // Updates time
+    function updateTime(){
+        document.querySelector(".time-box").innerHTML = timeLeft;
+    }
+
+    // Update flags
+    function updateFlags(){
+        document.querySelector(".flags-box").innerHTML = numOfMines;
+    }
+
     // Main:
     function main(){
 
         // Creats a new grid.
         createGrid();  
+
+        // Update time
+        updateTime();
+        updateFlags();
 
         // Runs over all cells
         for(var cell = 0; cell < getNumOfCells(); cell++){

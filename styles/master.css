@@ -13,3 +13,29 @@ body, html{
 .clr {
     clear: both;
 }
+
+.main-container{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin: auto;
+    width: 80%;
+    padding: 16px;
+}
+
+.panel{
+    display: inline-flex;
+    margin: 0 12px;
+    height: 25px;
+    width: 150px;
+    background-color: #f5f5f5;
+    border: 1px solid #303030;
+}
+
+.fa-flag, .fa-stopwatch{
+    padding: 4px;
+}
+
+.flags-box, .time-box{
+    padding: 2px;
+}

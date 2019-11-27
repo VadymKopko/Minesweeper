@@ -1,14 +1,7 @@
-.main-container{
-    width: 80%;
-    padding: 16px;
-    margin: auto;
-}
-
 table{
-    position: relative;
     margin: 0 auto;
     border-collapse: collapse;
-    border: 1px solid #006442;
+    border: 1px solid #303030;
 }
 
 td{
@@ -25,6 +18,7 @@ td {
 
 .text {
     color: #ffd500;
+    font-size: 16px;
 }
 
 /* Hidden cells: */
@@ -37,7 +31,7 @@ tr:nth-child(odd) td:nth-child(even).hidden-cell, tr:nth-child(even) td:nth-chil
 }
 
 .hidden-text{
-    visibility: hidden;
+    display: none;
 }
 
 /* Visual effects: */
@@ -51,4 +45,22 @@ tr:nth-child(odd) td:nth-child(even).hidden-cell, tr:nth-child(even) td:nth-chil
 
 .hover:hover{
     background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Different colors for numbers */
+
+.sml-num{
+    color: #90ee90;
+}
+
+.sml-num-2{
+    color:#f5f50a;
+}
+
+.mid-num{
+    color:#ffac14;
+}
+
+.lrg-num{
+    color:#ff2727;
 }
