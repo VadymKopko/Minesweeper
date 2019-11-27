@@ -8,7 +8,7 @@ table{
     position: relative;
     margin: 0 auto;
     border-collapse: collapse;
-    border: 1px solid #106a10;
+    border: 1px solid #006442;
 }
 
 td{
@@ -18,15 +18,32 @@ td{
     text-align: center;
 }
 
-td{
-    background-color: #1dc21d;
+/* Visible cells: */
+td {
+    background-color: #303030;
 }
 
-tr:nth-child(odd) td:nth-child(even), tr:nth-child(even) td:nth-child(odd){
-    background-color: #1aac1a;
+.text {
+    color: #ffd500;
 }
 
+/* Hidden cells: */
+td.hidden-cell{
+    background-color: #f5f5f5;
+}
+
+tr:nth-child(odd) td:nth-child(even).hidden-cell, tr:nth-child(even) td:nth-child(odd).hidden-cell{
+    background-color: #e1e1e1;
+}
+
+.hidden-text{
+    visibility: hidden;
+}
+
+/* Visual effects: */
 .hover{
+    margin: 0 auto;
+    position: absolute;
     height: 25px;
     width: 25px;
     background-color: transparent;
