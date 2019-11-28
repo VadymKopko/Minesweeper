@@ -25,7 +25,7 @@
     // Board settings: 
     var gridRows = 9;  // Determines  number of rows in a grid.
     var gridCols = 9;  // Determines  number of columns in a grid.
-    var numOfMines = 1;  // Determines the number of mines on the grid.
+    var numOfMines = 10;  // Determines the number of mines on the grid.
     var numOfFlags = numOfMines;
 
     // Initializes a new 1D Array:
@@ -40,7 +40,7 @@
     var userClick = true;
 
     // Debugginb mode:
-    var debug = false;
+    var debug = true;
 
     // Mathematical functions:
     // Function returns a random intager
@@ -271,15 +271,15 @@
         for(var row = 0; row < gridRows; row++){
             for(var col = 0; col < gridCols; col++){
                 if(!grid[row][col][0] && grid[row][col][4] != 0){
-                    cells[cellToDoc(row, col)].childNodes[1].innerHTML = grid[row][col][4];
+                    cells[cellToDoc(row, col)].childNodes[0].innerHTML = grid[row][col][4];
                     if(grid[row][col][4] == 1){
-                        cells[cellToDoc(row, col)].childNodes[1].classList.add("sml-num");
+                        cells[cellToDoc(row, col)].childNodes[0].classList.add("sml-num");
                     } else if(grid[row][col][4] == 2){
-                        cells[cellToDoc(row, col)].childNodes[1].classList.add("sml-num-2");
+                        cells[cellToDoc(row, col)].childNodes[0].classList.add("sml-num-2");
                     } else if(grid[row][col][4] == 3){
-                        cells[cellToDoc(row, col)].childNodes[1].classList.add("mid-num");
+                        cells[cellToDoc(row, col)].childNodes[0].classList.add("mid-num");
                     } else {
-                        cells[cellToDoc(row, col)].childNodes[1].classList.add("lrg-num");
+                        cells[cellToDoc(row, col)].childNodes[0].classList.add("lrg-num");
                     }
                     
                 }
@@ -294,7 +294,7 @@
     function gridLeftClick(){
 
         messageOut("",true);
-        
+
         if(!gameOver){
 
             // Find the cell in the grid 
@@ -368,12 +368,13 @@
                 updateFlags();
 
                 // Remove a flag icon to the cell
-                this.childNodes[2].remove();
+                this.childNodes[1].remove();
 
             }
         }
     }
 
+    // Other:
     // Check for win
     function checkForWin(){
 
@@ -406,16 +407,15 @@
         var td = document.createElement("td");
 
         // Adds a new spans to the cell.
-        addSpan(td);  // // Hover div, only exists as a visual effect.
         addSpan(td);  // Div which represents eather a number of mines around or a mine itself.
 
         // Adds a hover effect.
         // td.childNodes[0].classList.add("hover");
 
-        // Adds a hidden effect
+        // Hides a cell
         td.classList.add("hidden-cell");
-        td.childNodes[1].classList.add("text");
-        td.childNodes[1].classList.add("hidden-text");
+        td.childNodes[0].classList.add("text");
+        td.childNodes[0].classList.add("hidden-text");
 
         tr.appendChild(td);
     }
@@ -440,7 +440,7 @@
                 console.log("setVisible " + row + " " + col);
             }
             cell.classList.remove("hidden-cell");
-            cell.childNodes[1].classList.remove("hidden-text");
+            cell.childNodes[0].classList.remove("hidden-text");
             grid[row][col][1] = false;
         }
     }
@@ -454,7 +454,7 @@
         if(debug){
             console.log(row + " " + col);
         }
-        cells[cellToDoc(row, col)].childNodes[1].innerHTML = "X";
+        cells[cellToDoc(row, col)].childNodes[0].innerHTML += '<i class="fas fa-bomb"></i>';
     } 
 
     // Updates time
@@ -497,9 +497,8 @@
                 if(grid[row][col][3]){
                     // Remove a flag icon to the cell
                     if(grid[row][col][0]){
-                        cells[cellToDoc(row,col)].childNodes[2].remove();
-                        cells[cellToDoc(row,col)].childNodes[1].innerHTML = "Y";
-                        cells[cellToDoc(row,col)].childNodes[1].classList.add("found-mine");
+                        cells[cellToDoc(row,col)].childNodes[1].remove();
+                        cells[cellToDoc(row,col)].childNodes[0].classList.add("found-mine");
                     }
                 }
             }
