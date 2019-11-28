@@ -25,7 +25,7 @@
     // Board settings: 
     var gridRows = 9;  // Determines  number of rows in a grid.
     var gridCols = 9;  // Determines  number of columns in a grid.
-    var numOfMines = 10;  // Determines the number of mines on the grid.
+    var numOfMines = 1;  // Determines the number of mines on the grid.
     var numOfFlags = numOfMines;
 
     // Initializes a new 1D Array:
@@ -40,7 +40,7 @@
     var userClick = true;
 
     // Debugginb mode:
-    var debug = true;
+    var debug = false;
 
     // Mathematical functions:
     // Function returns a random intager
@@ -289,15 +289,11 @@
 
     }
 
-    // Function to reset all possible clikces to false
-    function resetAllClicks(){
-        // Users left click set false
-        userClick = false;
-    }
-
     // Event functions:
     // Fucntion runs on user left click
     function gridLeftClick(){
+
+        messageOut("",true);
         
         if(!gameOver){
 
@@ -376,6 +372,20 @@
 
             }
         }
+    }
+
+    // Check for win
+    function checkForWin(){
+
+        // Runs around the mine
+        for(var row = 0; row < gridRows; row++){
+            for(var col = 0; col < gridCols; col++){
+                if(grid[row][col][0] && !grid[row][col][3]){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // Functions to manipulate HTML document:
@@ -496,6 +506,41 @@
         }
     }
 
+    // Frame
+    function frame(){
+        if(!gameOver && gameStarted){
+            if(checkForWin()){
+
+                gameOver = true;
+
+                // Output a message to the screen
+                messageOut("You won! =)", true);
+
+                // Remove flags
+                removeFlags();
+
+                // Reveal all mines
+                revealMines();
+            }
+            timeLeft--;
+            updateTime();
+            if(timeLeft <= 0){
+
+                // TODO: FUNCTION FOR LOSE AND WON:
+
+                gameOver = true;
+                // Output a message to the screen
+                messageOut("You lost!", false);
+
+                // Remove flags
+                removeFlags();
+
+                // Reveal all mines
+                revealMines();
+            }
+        }
+    }
+
     // Main:
     function main(){
 
@@ -506,6 +551,9 @@
         updateTime();
         updateFlags();
 
+        // Message
+        messageOut("Click to start", true);
+
         // Runs over all cells
         for(var cell = 0; cell < getNumOfCells(); cell++){
 
@@ -514,7 +562,11 @@
 
             // Adds right click event
             cells[cell].addEventListener("contextmenu", gridRightClick);
+
+            // Adds refresh to the refresh button
         }
+
+        setInterval(frame, 1000);
     }
 
     // Launcher 

@@ -1,12 +1,21 @@
 header, footer{
+    margin: auto;
     display: block;
-    width: 100%;
+    width: 98.5%;
     height: 40px;
     background-color: whitesmoke;
-    color: black;
+    color: #303030;;
     font-size: 32px;
     padding: 8px;
-    border: 1px solid darkblue;
+    border: 1px solid #303030;
+}
+
+footer{
+    position: absolute;
+    text-align: center;
+    font-size: 18px;
+    height: 25px;
+    bottom: 1px;
 }
 
 li{
@@ -15,7 +24,7 @@ li{
 }
 
 li:hover{
-    color: #106a10;
+    color: darkgray;
 }
 
 .inner-header{
