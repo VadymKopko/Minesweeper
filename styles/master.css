@@ -39,3 +39,21 @@ body, html{
 .flags-box, .time-box{
     padding: 2px;
 }
+
+.message-panel{
+    height: 25px;
+    width: 250px;
+    padding: 2px;
+    margin: auto;
+    margin-bottom: 10px;
+    font-size: 18px;
+    margin-top: 0px;
+    background-color: #f5f5f5;
+    border: 1px solid #303030;
+    color: red;
+    text-align-last: center;
+}
+
+.won{
+    color: green;
+}

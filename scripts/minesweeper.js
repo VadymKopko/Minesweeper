@@ -36,7 +36,8 @@
 
     // Global boolean variables:
     var gameStarted = false;
-    var userLeftClick = true;
+    var gameOver = false;
+    var userClick = true;
 
     // Debugginb mode:
     var debug = true;
@@ -135,13 +136,25 @@
         }
 
         // When user clicked on the mine, aka imposible on the first turn
-        if(grid[row][col][0] && userLeftClick){
+        if(grid[row][col][0] && userClick){
 
             // Remove the hidden class
             setVisible(cells[n]);
-            // TODO: LOST FUNCTION
+            
+            // Set game over to true
+            gameOver = true;
 
-        } else if(!grid[row][col][0] || userLeftClick){
+            // Output a message to the screen
+            messageOut("You lost!", false);
+
+            // Remove flags
+            removeFlags();
+
+            // Reveal all mines
+            revealMines();
+
+
+        } else if(!grid[row][col][0] || userClick){
             // Only open new cells when a number of mines around less than 3.
             if(debug){
                 console.log("Open: " + row + " " + col);
@@ -150,19 +163,19 @@
             // Remove the hidden class
             setVisible(cells[n]);
 
-            if(grid[row][col][4] == 0 || userLeftClick){
+            if(grid[row][col][4] == 0 || userClick){
                 // Set all other iterations of check cell funtion by computer
-                userLeftClick = false;
+                userClick = false;
 
                 // Check other cells around this one if possible:
-                if(row-1>=0){if(!grid[row-1][col][2]){checkCell((row-1),col);}}  // North 
-                if(row+1<gridRows){if(!grid[row+1][col][2]){checkCell(row+1,col);}}  // South 
-                if(col+1<gridCols){if(!grid[row][col+1][2]){checkCell(row,col+1);}}  // East
-                if(col-1>=0){if(!grid[row][col-1][2]){checkCell(row,col-1);}}    // West
+                if(row-1>=0){if(!grid[row-1][col][2] && !grid[row-1][col][3]){checkCell((row-1),col);}}  // North 
+                if(row+1<gridRows){if(!grid[row+1][col][2] && !grid[row+1][col][3]){checkCell(row+1,col);}}  // South 
+                if(col+1<gridCols){if(!grid[row][col+1][2] && !grid[row][col+1][3]){checkCell(row,col+1);}}  // East
+                if(col-1>=0){if(!grid[row][col-1][2] && !grid[row][col-1][3]){checkCell(row,col-1);}}    // West
             }
 
             // Set all other iterations of check cell funtion by computer
-            userLeftClick = false;
+            userClick = false;
         }
     }
 
@@ -279,47 +292,91 @@
     // Function to reset all possible clikces to false
     function resetAllClicks(){
         // Users left click set false
-        userLeftClick = false;
+        userClick = false;
     }
 
     // Event functions:
+    // Fucntion runs on user left click
     function gridLeftClick(){
         
-        // Set that this is a user click
-        userLeftClick = true;
+        if(!gameOver){
 
-        // If game has already started, aka this is not a first click
-        if(gameStarted){ 
-
-            // Check around for mines
+            // Find the cell in the grid 
             var {row, col} = docToCell(this);
-            checkCell(row, col);
 
-        } else {
+            // Set that this is a user click
+            userClick = true;
 
-            if(debug){
-                console.log("gridLeftClick -> else");
+            // If game has already started, aka this is not a first click
+            if(gameStarted){ 
+
+                if(!grid[row][col][3]){
+                    // Check around for mines
+                    var {row, col} = docToCell(this);
+                    checkCell(row, col);
+                }
+
+            } else {
+
+                if(debug){
+                    console.log("gridLeftClick -> else");
+                }
+
+                // This code is olny run one every time the board is created.
+                gameStarted = true;  // Game has started
+
+                // Set the first cell to be visible so the mine is not populated here
+                setVisible(this);
+
+                // Populate grid with mines
+                populateMines();
+
+                // Poulate grid with numbers
+                populateNumbers();
+
+                // Check around for mines
+                checkCell(row, col);
             }
-
-            // This code is olny run one every time the board is created.
-            gameStarted = true;  // Game has started
-
-            // Set the first cell to be visible so the mine is not populated here
-            setVisible(this);
-
-            // Populate grid with mines
-            populateMines();
-
-            // Poulate grid with numbers
-            populateNumbers();
-
-            // Check around for mines
-            var {row, col} = docToCell(this);
-            checkCell(row, col);
         }
-        // Reset all clicks
-        // resetAllClicks();
     } 
+
+    // Fucntion runs on user right click, aka flag down
+    function gridRightClick(){
+
+        if(!gameOver && gameStarted){
+
+            // Find the cell in the grid 
+            var {row, col} = docToCell(this);
+
+            if(!grid[row][col][3]){
+                if(numOfFlags > 0){
+                    // Set to true
+                    grid[row][col][3] = true;
+
+                    // Less available flags
+                    numOfFlags--;
+                    updateFlags();
+
+                    // Add a flag icon to the cell
+                    var html = '<i class="fas fa-flag"></i>';
+                    this.innerHTML += (html);
+
+                }
+            } else {
+
+                // Set to false
+                grid[row][col][3] = false;
+
+                // More available flags
+                numOfFlags++;
+                updateFlags();
+
+                // Remove a flag icon to the cell
+                this.childNodes[2].remove();
+
+            }
+        }
+    }
 
     // Functions to manipulate HTML document:
     // Adds a new div to a cell
@@ -397,7 +454,46 @@
 
     // Update flags
     function updateFlags(){
-        document.querySelector(".flags-box").innerHTML = numOfMines;
+        document.querySelector(".flags-box").innerHTML = numOfFlags;
+    }
+
+    // Message funtion
+    function messageOut(str, win){
+        document.querySelector(".message-panel").innerHTML = str;
+        if(win){
+            document.querySelector(".message-panel").classList.add("won");
+        }
+    }
+
+    // Reaveals all mines on screen 
+    function revealMines(){
+
+        // Runs over rows and columns.
+        for (var row = 0; row < gridRows; row++){ 
+            for (var col = 0; col < gridCols; col++){
+                if(grid[row][col][0]){
+                    setVisible(cells[cellToDoc(row,col)]);
+                }
+            }
+        }
+        
+    }
+
+    // Removes all flags
+    function removeFlags(){
+        // Runs over rows and columns.
+        for (var row = 0; row < gridRows; row++){ 
+            for (var col = 0; col < gridCols; col++){
+                if(grid[row][col][3]){
+                    // Remove a flag icon to the cell
+                    if(grid[row][col][0]){
+                        cells[cellToDoc(row,col)].childNodes[2].remove();
+                        cells[cellToDoc(row,col)].childNodes[1].innerHTML = "Y";
+                        cells[cellToDoc(row,col)].childNodes[1].classList.add("found-mine");
+                    }
+                }
+            }
+        }
     }
 
     // Main:
@@ -412,8 +508,12 @@
 
         // Runs over all cells
         for(var cell = 0; cell < getNumOfCells(); cell++){
+
             // Adds left click event
             cells[cell].addEventListener("click", gridLeftClick);
+
+            // Adds right click event
+            cells[cell].addEventListener("contextmenu", gridRightClick);
         }
     }
 

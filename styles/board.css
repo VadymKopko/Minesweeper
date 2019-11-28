@@ -17,8 +17,8 @@ td {
 }
 
 .text {
-    color: #ffd500;
-    font-size: 16px;
+    color: #a19ff5;
+    font-size: 14px;
 }
 
 /* Hidden cells: */
@@ -50,17 +50,21 @@ tr:nth-child(odd) td:nth-child(even).hidden-cell, tr:nth-child(even) td:nth-chil
 /* Different colors for numbers */
 
 .sml-num{
-    color: #90ee90;
-}
-
-.sml-num-2{
     color:#f5f50a;
 }
 
-.mid-num{
+.sml-num-2{
     color:#ffac14;
+}
+
+.mid-num{
+    color:#e87d13;
 }
 
 .lrg-num{
     color:#ff2727;
+}
+
+.found-mine{
+    color: #90ee90;
 }
